@@ -145,8 +145,8 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
     private TranslateAnimation animIn;
     private TranslateAnimation exitAnim;
     private NetworkReceiver networkReceiver;
+    private HomeWatcherReceiver homeKeyReceiver;
     private int volume;
-//    private HomeWatcherReceiver mHomeKeyReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +165,7 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
         super.onStart();
 
         registerNetReceiver();
+        registerHomeKeyReceiver();
     }
 
     @Override
@@ -181,11 +182,11 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
         registerReceiver(networkReceiver, filter);
     }
 
-//    private void registerHomeKeyReceiver() {
-//        mHomeKeyReceiver = new HomeWatcherReceiver();
-//        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-//        registerReceiver(mHomeKeyReceiver, homeFilter);
-//    }
+    private void registerHomeKeyReceiver() {
+        homeKeyReceiver = new HomeWatcherReceiver();
+        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        registerReceiver(homeKeyReceiver, homeFilter);
+    }
 
     private void initData() {
         setAdapter();
@@ -251,6 +252,8 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
 
                     case MediaPlayer.Event.EncounteredError:
                         Log.i(TAG, "onEvent: error...");
+                        hideLoading();
+                        mediaPlayer.stop();
                         Toast.makeText(VideoPlayerActivity.this, "播放出错！", Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -263,24 +266,6 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
         ivlcVout = mediaPlayer.getVLCVout();
         ivlcVout.setVideoView(surfaceview);
         ivlcVout.attachViews(this);
-//        ivlcVout.attachViews(new IVLCVout.OnNewVideoLayoutListener() {
-//            @Override
-//            public void onNewVideoLayout(IVLCVout vlcVout, int width, int height, int visibleWidth, int visibleHeight, int sarNum, int sarDen) {
-//                Log.i(TAG, "onNewVideoLayout: ...");
-//                WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//                Display display = windowManager.getDefaultDisplay();
-//                Point point = new Point();
-//                display.getSize(point);
-//
-//                int videoWidth = width;
-//                int videoHight = height;
-//
-//                ViewGroup.LayoutParams layoutParams = surfaceview.getLayoutParams();
-//                layoutParams.width = point.x;
-//                layoutParams.height = (int) Math.ceil((float) videoHight * (float) point.x / (float) videoWidth);
-//                surfaceview.setLayoutParams(layoutParams);
-//            }
-//        });
         ivlcVout.addCallback(new IVLCVout.Callback() {
             @Override
             public void onSurfacesCreated(IVLCVout vlcVout) {
@@ -351,11 +336,12 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
                 if (event.getRepeatCount() != 0) {
-                    Log.i(TAG, "onKeyDown: repeat count != 0 ...");
                     break;
                 }
+
                 togglePlaylist();
                 break;
 
@@ -401,14 +387,15 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
                 if (llProgramList.getVisibility() == View.VISIBLE) {
                     return false;
                 }
-                cutProgram();
+                changeChannel();
                 break;
+
             case KeyEvent.KEYCODE_DPAD_DOWN:
                 Log.i(TAG, "onKeyUp: down --> up...");
                 if (llProgramList.getVisibility() == View.VISIBLE) {
                     return false;
                 }
-                cutProgram();
+                changeChannel();
                 break;
         }
         return super.onKeyUp(keyCode, event);
@@ -507,7 +494,7 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
         }
     }
 
-    private void cutProgram() {
+    private void changeChannel() {
         ivlcVout.detachViews();
         play(programIndex);
     }
@@ -542,6 +529,7 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
 
     @Override
     protected void onResume() {
+        Log.i(TAG, "onResume: ......");
         super.onResume();
         volume = PreUtils.getInt(VideoPlayerActivity.this, "Volume", 100);
         if (volume < 0) {
@@ -561,6 +549,12 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart: ...");
     }
 
     @Override
@@ -661,6 +655,7 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
             lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
             mVideoSurfaceFrame.setLayoutParams(lp);
+            Log.i(TAG, "updateVideoSurfaces: set surface layout...");
             changeMediaPlayerLayout(sw, sh);
             return;
         }
@@ -789,11 +784,11 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
         }
     }
 
-//    class HomeWatcherReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            PreUtils.setInt(context, "Volume", mediaPlayer.getVolume());
-//            mediaPlayer.setVolume(0);
-//        }
-//    }
+    class HomeWatcherReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            PreUtils.setInt(context, "Volume", mediaPlayer.getVolume());
+            mediaPlayer.setVolume(0);
+        }
+    }
 }
