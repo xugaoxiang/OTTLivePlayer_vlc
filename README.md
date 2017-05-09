@@ -45,7 +45,7 @@ mediaPlayer.play();
 
 Android studio --> File --> Project structure... --> app --> Source Compatibility
 
-![Q1](images/Q1.png)
+![q1](images/q1.png)
 
 ### Screenshots
 
