@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RotaProgressBar">
+        <attr name="circleColor" format="color"/>
+        <attr name="roundProgressColor" format="color"/>
+        <attr name="roundProgressWidth" format="dimension"/>
+        <attr name="circleWidth" format="dimension"/>
+    </declare-styleable>
+</resources>

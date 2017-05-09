@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/video_surface_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:foregroundGravity="clip_horizontal|clip_vertical" >
+
+        <SurfaceView
+            android:id="@+id/surfaceview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/rl_display"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/tv_program_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/w_180"
+                android:layout_marginTop="@dimen/h_102"
+                android:textSize="@dimen/w_90" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/h_204"
+                android:layout_alignParentBottom="true"
+                android:background="#AA001B37">
+
+                <TextView
+                    android:id="@+id/tv_program_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/w_108"
+                    android:textSize="@dimen/w_48" />
+
+                <TextView
+                    android:id="@+id/tv_system_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/w_180"
+                    android:textSize="@dimen/w_30" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_program_list"
+        android:layout_width="@dimen/w_588"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/h_90"
+            android:background="#001D39"
+            android:gravity="center"
+            android:text="频道列表"
+            android:textColor="#fff"
+            android:textSize="@dimen/w_37" />
+
+        <ListView
+            android:id="@+id/lv_program"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#88001B37"
+            android:listSelector="@drawable/move_frame"
+            android:scrollbars="none"></ListView>
+    </LinearLayout>
+
+    <com.xugaoxiang.ott.live.view.RotaProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="@dimen/w_120"
+        android:layout_height="@dimen/w_120"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/w_2"
+        android:visibility="invisible"
+        app:roundProgressColor="#004B96" />
+
+    <TextView
+        android:id="@+id/tv_cache"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#fff"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_net_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/h_210"
+        android:background="@drawable/spped_length_bg"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="#fff"
+        android:textSize="36sp"
+        android:visibility="invisible" />
+</RelativeLayout>
