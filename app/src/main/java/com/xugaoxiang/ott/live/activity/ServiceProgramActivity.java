@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class GetServiceProgramList extends Activity{
+public class ServiceProgramActivity extends Activity{
     private static String BASE_URI = "http://202.158.177.67:8080";
 
     private static final String LIVE_URI = "/api/live";
@@ -41,7 +41,7 @@ public class GetServiceProgramList extends Activity{
                     setLiveData();
                     break;
                 case CODE_NETWORK_ERROR:
-                    Toast.makeText(GetServiceProgramList.this , "网络连接异常，请检查网络!" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ServiceProgramActivity.this , "网络连接异常，请检查网络!" , Toast.LENGTH_SHORT).show();
                     finish();
                     break;
             }

@@ -25,6 +25,13 @@ android {
             res.srcDirs = ['src/main/res', 'src/main/res/values-en']
         }
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(output.outputFile.parent, defaultConfig.applicationId + "_" + defaultConfig.versionName +".apk" );
+        }
+    }
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {

@@ -231,9 +231,13 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
                         if (event.getBuffering() >= 100.0f) {
                             hideLoading();
                             Log.i(TAG, "onEvent: buffer success...");
-                            mediaPlayer.play();
                             handler.sendEmptyMessageDelayed(CODE_HIDE_BLACK, 500);
                             handler.sendEmptyMessageDelayed(CODE_GONE_PROGRAMINFO, 5000);
+
+                            handler.sendEmptyMessageDelayed(CODE_HIDE_BLACK, 500);
+                            handler.sendEmptyMessageDelayed(CODE_GONE_PROGRAMINFO, 5000);
+
+                            mediaPlayer.play();
                         } else {
                             showLoading();
                             tvCache.setText("缓冲: " + Math.floor(event.getBuffering()) + "%");
@@ -247,6 +251,7 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
 
                     case MediaPlayer.Event.EncounteredError:
                         Log.i(TAG, "onEvent: error...");
+                        Toast.makeText(VideoPlayerActivity.this, "播放出错！", Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -555,13 +560,11 @@ public class VideoPlayerActivity extends Activity implements IVLCVout.OnNewVideo
 
     @Override
     protected void onPause() {
-        Log.i(TAG, "onPause: ...");
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        Log.i(TAG, "onDestroy: ....");
         super.onDestroy();
 
         PreUtils.setInt(VideoPlayerActivity.this, PROGRAM_KEY, programIndex);
