@@ -123,8 +123,6 @@ public class VideoPlayerActivity extends Activity {
     private TranslateAnimation animIn;
     private TranslateAnimation exitAnim;
     private NetworkReceiver networkReceiver;
-    private HomeWatcherReceiver homeKeyReceiver;
-    private int volume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +139,6 @@ public class VideoPlayerActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        registerNetReceiver();
-        registerHomeKeyReceiver();
     }
     
     @Override
@@ -157,12 +153,6 @@ public class VideoPlayerActivity extends Activity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         networkReceiver = new NetworkReceiver();
         registerReceiver(networkReceiver, filter);
-    }
-
-    private void registerHomeKeyReceiver() {
-        homeKeyReceiver = new HomeWatcherReceiver();
-        IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        registerReceiver(homeKeyReceiver, homeFilter);
     }
 
     private void initData() {
@@ -264,7 +254,7 @@ public class VideoPlayerActivity extends Activity {
 
             @Override
             public void onSurfacesDestroyed(IVLCVout vlcVout) {
-                Log.i(TAG, "onSurfacesDestroyed: ...");
+
             }
         });
 
@@ -516,29 +506,29 @@ public class VideoPlayerActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        volume = PreUtils.getInt(VideoPlayerActivity.this, "Volume", 100);
-        if (volume < 0) {
-            volume = 0;
-        } else if (volume > 100) {
-            volume = 100;
+
+        if (networkReceiver == null) {
+            registerNetReceiver();
         }
 
-        mediaPlayer.setVolume(volume);
-        try {
-            mediaPlayer.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mediaPlayer.play();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            ivlcVout.detachViews();
+        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        ivlcVout.setVideoView(surfaceview);
+        ivlcVout.attachViews();
     }
 
     @Override
@@ -549,10 +539,6 @@ public class VideoPlayerActivity extends Activity {
 
         if (networkReceiver != null) {
             unregisterReceiver(networkReceiver);
-        }
-
-        if (homeKeyReceiver != null) {
-            unregisterReceiver(homeKeyReceiver);
         }
 
         if (mediaPlayer != null) {
@@ -581,7 +567,6 @@ public class VideoPlayerActivity extends Activity {
     }
 
     class NetworkReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!NetWorkUtils.getNetState(context)) {
@@ -595,14 +580,6 @@ public class VideoPlayerActivity extends Activity {
                     mediaPlayer.play();
                 }
             }
-        }
-    }
-
-    class HomeWatcherReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            PreUtils.setInt(context, "Volume", mediaPlayer.getVolume());
-            mediaPlayer.setVolume(0);
         }
     }
 }
