@@ -60,37 +60,11 @@ public class MainActivity extends Activity {
         });
 
         mediaPlayer = new MediaPlayer(libvlc);
-        mediaPlayer.setEventListener(new MediaPlayer.EventListener() {
-            @Override
-            public void onEvent(MediaPlayer.Event event) {
-                switch (event.type) {
-                    case MediaPlayer.Event.Buffering:
-                        if (mediaPlayer.isPlaying()) {
-                            mediaPlayer.pause();
-                        }
 
-                        if (event.getBuffering() >= 100.0f) {
-                            mediaPlayer.play();
-                        } else {
-                            Log.i(TAG, "缓冲: " + Math.floor(event.getBuffering()) + "%");
-                        }
+        //media = new Media(libvlc, Uri.parse("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"));
 
-                        break;
-
-                    case MediaPlayer.Event.Playing:
-                        Log.i(TAG, "onEvent: playing...");
-                        break;
-
-                    case MediaPlayer.Event.EncounteredError:
-                        Log.i(TAG, "onEvent: error...");
-                        mediaPlayer.stop();
-                        Toast.makeText(MainActivity.this, "播放出错！", Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-
-        media = new Media(libvlc, Uri.parse("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"));
+        // take live555 as RTSP server
+        media = new Media(libvlc, Uri.parse("rtsp://10.0.0.188:8554/king.mkv"));
         mediaPlayer.setMedia(media);
 
         ivlcVout = mediaPlayer.getVLCVout();
