@@ -146,12 +146,11 @@ public class LibVLC extends VLCObject<LibVLC.Event> {
 
     private static boolean sLoaded = false;
 
-    static synchronized void loadLibraries() {
+    public static synchronized void loadLibraries() {
         if (sLoaded)
             return;
         sLoaded = true;
 
-        System.loadLibrary("c++_shared");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {

@@ -76,11 +76,6 @@ public class MediaPlayer
         mMediaPlayer = new org.videolan.libvlc.MediaPlayer(mLibVLC);
     }
 
-    public MediaPlayer(Context context) {
-        mLibVLC = new LibVLC(context);
-        mMediaPlayer = new org.videolan.libvlc.MediaPlayer(mLibVLC);
-    }
-
     public static MediaPlayer create(Context context, Uri uri) {
         return create (context, uri, null);
     }
@@ -91,8 +86,7 @@ public class MediaPlayer
 
     public static MediaPlayer create(Context context, Uri uri, SurfaceHolder holder,
                                      AudioAttributes audioAttributes, int audioSessionId) {
-//        MediaPlayer player = new MediaPlayer();
-        MediaPlayer player = new MediaPlayer(context);
+        MediaPlayer player = new MediaPlayer();
         //player.setDataSource(context, uri); This throws exception, but not this create()
         return player;
     }
