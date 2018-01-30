@@ -146,12 +146,11 @@ public class LibVLC extends VLCObject<LibVLC.Event> {
 
     private static boolean sLoaded = false;
 
-    static synchronized void loadLibraries() {
+    public static synchronized void loadLibraries() {
         if (sLoaded)
             return;
         sLoaded = true;
 
-        System.loadLibrary("c++_shared");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {
@@ -188,8 +187,8 @@ public class LibVLC extends VLCObject<LibVLC.Event> {
         }
 
         try {
-            System.loadLibrary("vlc");
             System.loadLibrary("vlcjni");
+            System.loadLibrary("jniloader");
         } catch (UnsatisfiedLinkError ule) {
             Log.e(TAG, "Can't load vlcjni library: " + ule);
             /// FIXME Alert user

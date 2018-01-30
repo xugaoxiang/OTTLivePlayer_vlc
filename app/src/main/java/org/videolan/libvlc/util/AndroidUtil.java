@@ -27,11 +27,7 @@ import java.io.File;
 
 public class AndroidUtil {
 
-    /*
-    * 暂时不做Android O适配
-    * */
 //    public static final boolean isOOrLater = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
-//    public static final boolean isNougatOrLater = isOOrLater || android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     public static final boolean isNougatOrLater = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     public static final boolean isMarshMallowOrLater = isNougatOrLater || android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     public static final boolean isLolliPopOrLater = isMarshMallowOrLater || android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;

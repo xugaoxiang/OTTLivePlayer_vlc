@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
+
+import com.xugaoxiang.vlcdemo.utils.ScreenUtils;
 
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
@@ -38,7 +40,30 @@ public class MainActivity extends Activity {
         ArrayList<String> options = new ArrayList<>();
         options.add("--aout=opensles");
         options.add("--audio-time-stretch");
-        options.add("-vvv");
+
+        options.add("--audio-resampler");
+        options.add("soxr");
+
+        options.add("--avcodec-skiploopfilter");
+        options.add("1");
+
+        options.add("--avcodec-skip-frame");
+        options.add("0");
+
+        options.add("--avcodec-skip-idct");
+        options.add("0");
+
+        options.add("--udp-timeout");
+        options.add("5");
+
+        // deinterlace and deinterlace-mode, see https://wiki.videolan.org/Deinterlacing/#VLC_deinterlace_modes
+        options.add("--deinterlace");
+        options.add("1");
+
+        options.add("--deinterlace-mode");
+        options.add("bob");
+
+        options.add("-vv");
         libvlc = new LibVLC(MainActivity.this, options);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.setKeepScreenOn(true);
@@ -61,10 +86,7 @@ public class MainActivity extends Activity {
 
         mediaPlayer = new MediaPlayer(libvlc);
 
-        //media = new Media(libvlc, Uri.parse("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"));
-
-        // take live555 as RTSP server
-        media = new Media(libvlc, Uri.parse("rtsp://10.0.0.188:8554/king.mkv"));
+        media = new Media(libvlc, Uri.parse("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"));
         mediaPlayer.setMedia(media);
 
         ivlcVout = mediaPlayer.getVLCVout();
@@ -93,5 +115,20 @@ public class MainActivity extends Activity {
         });
 
         mediaPlayer.play();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_STAR:
+                try {
+                    ScreenUtils.takeScreenshot(getApplicationContext());
+                } catch (Exception e) {
+                    new Exception("TakeScreenshot error.").printStackTrace();
+                }
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

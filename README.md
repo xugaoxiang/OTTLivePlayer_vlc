@@ -5,7 +5,7 @@ This is a live media player for android ott box based on [vlc-android](https://c
 ### Compile from vlc git
 
 1. <https://wiki.videolan.org/AndroidCompile>
-2. <http://www.xugaoxiang.com/blog/index.php/archives/57/>
+2. <http://www.xugaoxiang.com/post/85>
 
 ### How to use in your app
 
@@ -32,7 +32,7 @@ mediaPlayer = new MediaPlayer(libvlc);
 
 IVLCVout ivlcVout = mediaPlayer.getVLCVout();
 ivlcVout.setVideoView(surfaceView);
-ivlcVout.attachViews(this);
+ivlcVout.attachViews();
 
 Media media = new Media(libvlc, Uri.parse("udp://@225.0.0.1:9000"));
 mediaPlayer.setMedia(media);
@@ -46,6 +46,10 @@ mediaPlayer.play();
 Android studio --> File --> Project structure... --> app --> Source Compatibility
 
 ![q1](images/q1.png)
+
+##### Android studio 3.0.1版本问题
+
+<http://xugaoxiang.com/post/111>
 
 ### Screenshots
 
